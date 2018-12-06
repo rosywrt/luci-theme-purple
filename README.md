@@ -25,4 +25,14 @@ Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/L
 ## Previews on PC
 <div align=center><img src="https://raw.githubusercontent.com/rosywrt/luci-theme-purple/master/previews/login-pc.png" alt="login-pc"/></div>
 
+<div align=center><img src="https://raw.githubusercontent.com/rosywrt/luci-theme-purple/master/previews/logged-pc.png" alt="login-pc"/></div>
+
 <div align=center><img src="https://raw.githubusercontent.com/rosywrt/luci-theme-purple/master/previews/navi-pc.png" alt="navi-pc"/></div>
+
+
+## Previews on mobile
+<div align=center><img src="https://raw.githubusercontent.com/rosywrt/luci-theme-purple/master/previews/login-mobile.png" alt="login-pc"/></div>
+
+<div align=center><img src="https://raw.githubusercontent.com/rosywrt/luci-theme-purple/master/previews/logged-mobile.png" alt="login-pc"/></div>
+
+<div align=center><img src="https://raw.githubusercontent.com/rosywrt/luci-theme-purple/master/previews/navi-mobile.png" alt="navi-pc"/></div>
