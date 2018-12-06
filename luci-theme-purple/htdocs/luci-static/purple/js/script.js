@@ -242,6 +242,13 @@ $(".main > .loading").fadeIn('fast');
         $('header .close').css('display', 'inline-block');
     });
 
+    var waringL = $('.node-main-login .alert-message.warning').length;
+    var inp = $('.node-main-login>.main form .cbi-button-apply');
+    var top = parseInt($('.node-main-login>.main form .cbi-button-apply').css('top'));
+    if(waringL > 0){
+        inp.css('top', 48 + top);
+    }
+
     /*
      * auto refresh on / off
      */
