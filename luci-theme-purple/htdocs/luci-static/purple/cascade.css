@@ -1484,9 +1484,9 @@ footer a {
 .cbi-section-remove .cbi-button,
 .cbi-button-reset,
 .cbi-button-remove {
-	color: #7d5d9c;
+	color: #5d769c;
     background-color: transparent;
-    border: 1px solid #7d5d9c;
+    border: 1px solid #5d769c;
 }
 
 .cbi-page-actions::after {
@@ -1512,7 +1512,7 @@ footer a {
 .cbi-button-reload,
 .cbi-button-edit {
 	color: #fff;
-    background-color: #5D769C;
+    background-color: #7d5d9c;
     border: none;
 }
 
