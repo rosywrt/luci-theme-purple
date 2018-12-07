@@ -22,6 +22,9 @@ LuCI Theme Bootstrap: Copyright 2012 Nut & Bolt
 
 Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 
+## GIF map
+<div align=center><img src="https://raw.githubusercontent.com/rosywrt/luci-theme-purple/master/previews/purple-gif.gif" alt="login-pc"/></div>
+
 ## Previews on PC
 <div align=center><img src="https://raw.githubusercontent.com/rosywrt/luci-theme-purple/master/previews/login-pc.png" alt="login-pc"/></div>
 
