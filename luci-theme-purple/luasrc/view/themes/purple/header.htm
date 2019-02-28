@@ -1,20 +1,16 @@
-<%#                                   
-    Purple is a theme for LuCI. It is based on luci-theme-bootstrap
-    luci-theme-purple
-        Copyright 2018 Rosy Song <rosysong@rosinson.com>
-        Copyright 2018 Yan Lan Shen <yanlan.shen@rosinson.com>
-    
-    Have a bug? Please create an issue here on GitHub!
-        https://github.com/rosywrt/luci-theme-purple/issues
+<%#
+	Purple is a pure HTML5 theme for LuCI.
 
-    luci-theme-bootstrap:
-        Copyright 2008 Steven Barth <steven@midlink.org>
-        Copyright 2008 Jo-Philipp Wich <jow@openwrt.org>
-        Copyright 2012 David Menting <david@nut-bolt.nl>
+	luci-theme-purple
+		Copyright 2018 Rosy Song <rosysong@rosinson.com>
+     		Copyright 2018 Yan Lan Shen <yanlan.shen@rosinson.com>
 
-    Licensed to the public under the Apache License 2.0
+	Have a bug? Please create an issue here on GitHub!
+		https://github.com/rosywrt/luci-theme-purple/issues
 
+	Licensed to the public under the Apache License 2.0
 -%>
+
 <%
 	local sys  = require "luci.sys"
 	local util = require "luci.util"
@@ -102,13 +98,13 @@
 	local function render_submenu(prefix, node)
 		local childs = disp.node_childs(node)
 		if #childs > 0 then
-			write('<ul class="slide-menu row">')
+			write('<ul class="slide-menu">')
 
 			for i, r in ipairs(childs) do
 				local nnode = node.nodes[r]
 				local title = pcdata(striptags(translate(nnode.title)))
 
-				write('<li class="col-zs-6 col-xs-4 col-sm-4 col-md-3"><a data-title="%s" href="%s">%s</a></li>' %{
+				write('<li><a data-title="%s" href="%s">%s</a></li>' %{
 					title,
 					nodeurl(prefix, r, nnode.query),
 					title
@@ -119,7 +115,7 @@
 		end
 	end
 
-	local function render_topmenu(sign)
+	local function render_topmenu(show_submenu)
 		local childs = disp.node_childs(cattree)
 		if #childs > 0 then
 			write('<ul class="nav">')
@@ -129,28 +125,16 @@
 				local grandchildren = disp.node_childs(nnode)
 
 				if #grandchildren > 0 then
-					if sign then
-						local title = pcdata(striptags(translate(nnode.title)))
+					local title = pcdata(striptags(translate(nnode.title)))
 
-						write('<li class="slide row"><a class="menu" id="%s" data-title="%s" href="#">%s</a>' %{
-							title,
-							title,
-							title
-						})
-	
+					write('<li class="slide"><a class="menu" data-title="%s" href="#">%s</a>' %{
+						title,
+						title
+					})
+					if show_submenu then
 						render_submenu(category .. "/" .. r, nnode)
-						write('</li>')
-					else
-						local title = pcdata(striptags(translate(nnode.title)))           
-                                                                                                                          
-                                        	write('<li class="slide"><a class="menu" data-title="%s" href="#%s">%s</a>' %{
-                                                	title,                                 
-	                                                title,
-							title
-                	                        })                              
-                        	                                                                                  
-                                	        write('</li>')
 					end
+					write('</li>')
 				end
 			end
 
@@ -169,10 +153,10 @@
                                 if #grandchildren <= 0 then
                                         local title = pcdata(striptags(translate(nnode.title)))                      
                                                                                           
-                                        write('<span class="label logout"><div class="mobile-hide">%s</div><a data-title="%s" href="%s"></a></span>' %{                      
-                                                title,
-						title,
+                                        write('<a class="label logout" data-title="%s" href="%s"><span class="label-hide">%s</span></a>' %{
+                                                title,                                    
                                                 nodeurl(category, r, nnode.query),
+						title
                                         })                                                                           
                                 end                                                       
                         end                                                                                          
@@ -195,7 +179,7 @@
 			end
 
 			if ucichanges > 0 then
-				write('<a class="uci_change_indicator label notice" href="%s?redir=%s"><span class="mobile-hide">%s:</span> %d</a>' %{
+				write('<a class="uci_change_indicator label notice" href="%s?redir=%s"><span class="label-hide">%s</span> %d</a>' %{
 					url(category, 'uci/changes'),
 					http.urlencode(http.formvalue('redir') or table.concat(disp.context.request, "/")),
 					translate('Unsaved Changes'),
@@ -204,6 +188,26 @@
 			end
 		end
 	end
+
+	local function auth_level()
+		local childs = disp.node_childs(cattree)                               
+                if #childs > 0 then
+                        for i, r in ipairs(childs) do                                                                     
+                                local nnode = cattree.nodes[r]                  
+                                local grandchildren = disp.node_childs(nnode)          
+                                                     
+                                if #grandchildren > 0 then
+					-- If this value is returned, the current interface is the logged-in data output interface
+					return "auth"
+				else
+					-- If this value is returned, it indicates that the current interface is a data output interface that does not require login.
+					return "noauth"
+                                end                                       
+                        end                                     
+                end
+		-- If this value is returned, the current interface is the login interface
+		return "login"
+        end
 -%>
 <!DOCTYPE html>
 <html lang="<%=luci.i18n.context.lang%>">
@@ -231,7 +235,7 @@
 	<link rel="icon" href="<%=media%>/logo.png" sizes="144x144">
 	<link rel="apple-touch-icon-precomposed" href="<%=media%>/logo.png" sizes="144x144">
 
-	<link rel="stylesheet" href="<%=media%>/cascade.css">
+	<link rel="stylesheet" href="<%=media%>/cascade.css?v=git-19.048.53009-55cd0c4">
 	<link rel="shortcut icon" href="<%=media%>/favicon.ico">
 	<% if node and node.css then %>
 	<link rel="stylesheet" href="<%=resource%>/<%=node.css%>">
@@ -243,72 +247,46 @@
 	<% end -%>
 	<script src="<%=resource%>/cbi.js"></script>
 	<script src="<%=resource%>/xhr.js"></script>
+	<script src="<%=media%>/js/ScrollY.js"></script>
 </head>
 
-<body class="lang_<%=luci.i18n.context.lang%> <%- if node then %><%= striptags( node.title ) %><%- end %> <% if luci.dispatcher.context.authsession then %>logged-in<% end %>">
+<body class="lang_<%=luci.i18n.context.lang%> <%- if node then %> <%= striptags( node.title ) %><%- end %> <%- if auth_level() == "auth" then %> logged-in<%- end %> <%- if auth_level() == "noauth" then %> login-info<%- end %> <%- if auth_level() == "login" then %> login<%- end %>">
 	<header>
-		<div class="fill">
-			<div class="logo-con pull-left">
-				<img src="<%=media%>/logo.png">
-				<a class="brand" href="#"><%=boardinfo.hostname or "?"%></a>
-			</div>
-			<div class="btn-con pull-right">
-				<button class="label open"></button>
-				<button class="label close"></button>
+		<div class="container">
+			<a class="label brand place top" href="#"><span class="label-hide"><%=boardinfo.hostname or "?"%></span></a>
+			<span class="label showSide place center open-menu"><span class="label-hide">open menu</span></span>
+			<div class="place bottom">
 				<% render_changes() %>
 				<span id="xhr_poll_status" style="display:none" onclick="XHR.running() ? XHR.halt() : XHR.run()">
-					<span class="label success" id="xhr_poll_status_on"><span class="mobile-hide">
-							<%:Auto Refresh%></span>
-						<%:on%></span>
-					<span class="label" id="xhr_poll_status_off" style="display:none"><span class="mobile-hide">
-							<%:Auto Refresh%></span>
-						<%:off%></span>
+					<span class="label success" id="xhr_poll_status_on"><span class="label-hide"><%:Auto Refresh%></span><%:on%></span>
+					<span class="label" id="xhr_poll_status_off" style="display:none"><span class="label-hide"><%:Auto Refresh%></span><%:off%></span>
 				</span>
 				<% render_logout() %>
 			</div>
 		</div>
 	</header>
+	<div style="" class="loading">
+		<span>                                                                                                                                                 
+                	<div class="loading-img">                                                                           
+                        	<img src="<%=media%>/loading.svg">                                                          
+                        </div>Loading...                                                                    
+                </span>
+	</div>
 	<div class="main">
-		<div style="" class="loading"><span>
-				<div class="loading-img">
-					<img src="<%=media%>/loading.svg">
-				</div>Loading...
-			</span></div>
-		<div class="sidebar">
-			<a class="label brand" href="#"><div class="mobile-hide"><%=boardinfo.hostname or "?"%></div></a>
-			<button class="label open"><div class="mobile-hide">open menu</div></button>
-			<button class="label close"><div class="mobile-hide">close menu</div></button>
-			<div class="root-btn">
-				<% render_changes() %>
-				<span id="xhr_poll_status" onclick="XHR.running() ? XHR.halt() : XHR.run()">
-					<span class="label success" id="xhr_poll_status_on">
-						<span class="mobile-hide"><%:Auto Refresh%></span><%:on%>
-					</span>
-					<span class="label" id="xhr_poll_status_off" style="display:none">
-						<span class="mobile-hide"><%:Auto Refresh%></span><%:off%>
-					</span>
-				</span>
-				<% render_logout() %>
-			</div>
-		</div>
 		<div class="main-left">
-			<div class="nav-shell">
-				<% render_topmenu(true) %>
+			<div class="top-menu">
+				<% render_topmenu(false) %>
 			</div>
-			<div class="top-menu mobile-hide">
-				<div class="nav-container">
-					<% render_topmenu(false) %>
-				</div>
+			<div class="all-menu">
+				<% render_topmenu(true) %>
 			</div>
 		</div>
 		<div class="main-right">
-			<div id="maincontent">
 				<div class="container">
-					<a class="brand" href="#"><%=boardinfo.hostname or "?"%></a>
+					<a class="brand PC-hide" href="#"><%=boardinfo.hostname or "?"%></a>
 					<%- if luci.sys.process.info("uid") == 0 and luci.sys.user.getuser("root") and not luci.sys.user.getpasswd("root") then -%>
 					<div class="alert-message warning">
 						<h4>
-							<img src="<%=media%>/no-pwd.png">
 							<%:No password set!%>
 						</h4>
 						<p>

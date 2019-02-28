@@ -1,20 +1,16 @@
-<%#                                   
-    Purple is a theme for LuCI. It is based on luci-theme-bootstrap
-    luci-theme-purple
-        Copyright 2018 Rosy Song <rosysong@rosinson.com>
-        Copyright 2018 Yan Lan Shen <yanlan.shen@rosinson.com>
-    
-    Have a bug? Please create an issue here on GitHub!
-        https://github.com/rosywrt/luci-theme-purple/issues
+<%#
+	Purple is a pure HTML5 theme for LuCI.
 
-    luci-theme-bootstrap:
-        Copyright 2008 Steven Barth <steven@midlink.org>
-        Copyright 2008 Jo-Philipp Wich <jow@openwrt.org>
-        Copyright 2012 David Menting <david@nut-bolt.nl>
+	luci-theme-purple
+		Copyright 2018 Rosy Song <rosysong@rosinson.com>
+     		Copyright 2018 Yan Lan Shen <yanlan.shen@rosinson.com>
 
-    Licensed to the public under the Apache License 2.0
+	Have a bug? Please create an issue here on GitHub!
+		https://github.com/rosywrt/luci-theme-purple/issues
 
+	Licensed to the public under the Apache License 2.0
 -%>
+
 <%
     local ver = require "luci.version"
     local disp = require "luci.dispatcher"
@@ -22,10 +18,13 @@
     local category = request[1]
     local tree = disp.node()
     local categories = disp.node_childs(tree)
+    local log = require "luci.log"
 %>
 
 </div>
+</div>
 <footer class="mobile-hide">
+<% log.print_r(luci.dispatcher.context.path) %>
     <a href="https://github.com/openwrt/luci">Powered by<%= ver.luciname %> (<%= ver.luciversion %>)</a> /
     <%= ver.distversion %>
     <% if #categories > 1 then %>
@@ -36,8 +35,6 @@
     </ul>
     <% end %>
 </footer>
-</div>
-</div>
 
 <script>                                         
     var luciLocation = <%= luci.http.write_json(luci.dispatcher.context.path) %>;
